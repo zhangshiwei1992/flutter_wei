@@ -13,7 +13,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: Text("搜索页面"),
       ),
-      body: Text('搜索'),
+      body: Text('搜索..........'),
     );
   }
 }
