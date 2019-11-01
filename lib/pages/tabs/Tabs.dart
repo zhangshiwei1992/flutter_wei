@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/pages/Cart.dart';
-import 'package:flutter_wei/pages/Category.dart';
-import 'package:flutter_wei/pages/Home.dart';
-import 'package:flutter_wei/pages/User.dart';
+import 'package:flutter_wei/pages/tabs/Cart.dart';
+import 'package:flutter_wei/pages/tabs/Category.dart';
+import 'package:flutter_wei/pages/tabs/Home.dart';
+import 'package:flutter_wei/pages/tabs/User.dart';
 
 class Tabs extends StatefulWidget {
   Tabs({Key key}) : super(key: key);

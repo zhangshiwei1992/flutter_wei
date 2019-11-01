@@ -1,10 +1,11 @@
 class FileDetail {
   String businessCode;
-  int channelId;
+  Object channelId;
   String creator;
   String fileCode;
   String fileName;
   String filePath;
+  Object fileId;
   Object id;
   String isCheck;
   String modifier;
@@ -19,6 +20,7 @@ class FileDetail {
     this.fileName,
     this.filePath,
     this.id,
+    this.fileId,
     this.isCheck,
     this.modifier,
     this.subBusinessCode,
@@ -33,6 +35,7 @@ class FileDetail {
     fileName = json['fileName'];
     filePath = json['filePath'];
     id = json['id'];
+    fileId = json['fileId'];
     isCheck = json['isCheck'];
     modifier = json['modifier'];
     subBusinessCode = json['subBusinessCode'];
@@ -48,6 +51,7 @@ class FileDetail {
     data['fileName'] = this.fileName;
     data['filePath'] = this.filePath;
     data['id'] = this.id;
+    data['fileId'] = this.fileId;
     data['isCheck'] = this.isCheck;
     data['modifier'] = this.modifier;
     data['subBusinessCode'] = this.subBusinessCode;

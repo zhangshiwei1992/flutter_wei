@@ -4,7 +4,7 @@ import 'package:flutter_wei/constants/Result.dart';
 
 /// 通用的发送请求
 Future<Result> dioPost(String path, var requestBody) async {
-  print('post请求-----------------------开始啦');
+  print('post请求-----------------------开始啦' + requestBody.toString());
   Result result = new Result();
   try {
     var response = await Dio().post(EnvInfo.apiHost + path, data: requestBody);

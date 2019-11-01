@@ -117,20 +117,27 @@ class _CategoryPageState extends State<CategoryPage>
                   mainAxisSpacing: 10),
               itemCount: this._orderList.length,
               itemBuilder: (context, index) {
-                return Container(
-                  // padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: <Widget>[
-                      AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Image.network("${_defaultImage}",
-                            fit: BoxFit.cover),
-                      ),
-                      Container(
-                        height: ScreenAdapter.height(28),
-                        child: Text("${this._orderList[index].orderCode}"),
-                      )
-                    ],
+                return InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/productList', arguments: {
+                      "orderCode": this._orderList[index].orderCode
+                    });
+                  },
+                  child: Container(
+                    // padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: <Widget>[
+                        AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Image.network("${_defaultImage}",
+                              fit: BoxFit.cover),
+                        ),
+                        Container(
+                          height: ScreenAdapter.height(28),
+                          child: Text("${this._orderList[index].orderCode}"),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
