@@ -70,34 +70,61 @@ class _HomePageState extends State<HomePage> {
           });
         }
       }
-      print(_fileDetailList[0].businessCode);
-      print(_fileDetailList[0].fileCode);
-      print(_fileDetailList[0].fileName);
     });
   }
 
   // 轮播图
   Widget _swiperWidget() {
-    return Container(
-      child: AspectRatio(
-        aspectRatio: 2 / 1,
-        child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
-            return new Image.network(
-              _bBrandList[index].logo != '' &&
-                      _bBrandList[index].logo != null &&
-                      _jBrandList[index].logo.contains(".png")
-                  ? _bBrandList[index].logo
-                  : _defaultImage,
-              fit: BoxFit.fill,
-            );
-          },
-          itemCount: _bBrandList.length,
-          pagination: new SwiperPagination(),
-          autoplay: true,
+    return _bBrandList.length > 0
+        ? Container(
+            child: AspectRatio(
+              aspectRatio: 2 / 1,
+              child: Swiper(
+                itemBuilder: (BuildContext context, int index) {
+                  return new Image.network(
+                    _bBrandList[index].logo != '' &&
+                            _bBrandList[index].logo != null &&
+                            _jBrandList[index].logo.contains(".png")
+                        ? _bBrandList[index].logo
+                        : _defaultImage,
+                    fit: BoxFit.fill,
+                  );
+                },
+                itemCount: _bBrandList.length,
+                pagination: new SwiperPagination(),
+                autoplay: true,
+              ),
+            ),
+          )
+        : _loadingCircle(true);
+  }
+
+  // 加载中的圈圈
+  Widget _loadingCircle(bool hasMore) {
+    if (hasMore) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '加载中...',
+                style: TextStyle(fontSize: 16),
+              ),
+              CircularProgressIndicator(
+                strokeWidth: 1,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Center(
+        child: Text('我是有底线的!'),
+      );
+    }
   }
 
   Widget _titleWidget(textString) {
@@ -126,118 +153,122 @@ class _HomePageState extends State<HomePage> {
 
   // 热门商品
   Widget _hotProductListWidget() {
-    return Container(
-      height: ScreenAdapter.height(234),
-      padding: EdgeInsets.all(ScreenAdapter.width(20)),
-      child: ListView.builder(
-        // 水平滑动的listView
-        scrollDirection: Axis.horizontal,
-        itemCount: _jBrandList.length,
-        itemBuilder: (contxt, index) {
-          return Column(
-            children: <Widget>[
-              Container(
-                height: ScreenAdapter.height(140),
-                width: ScreenAdapter.width(140),
-                margin: EdgeInsets.only(right: ScreenAdapter.width(21)),
-                child: Image.network(
-                  _jBrandList[index].logo != '' &&
-                          _jBrandList[index].logo != null &&
-                          _jBrandList[index].logo.contains(".png")
-                      ? _jBrandList[index].logo
-                      : _defaultImage,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  top: ScreenAdapter.height(10),
-                ),
-                height: ScreenAdapter.height(44),
-                child: Text(
-                  _jBrandList[index].name != '' &&
-                          _jBrandList[index].name != null
-                      ? _jBrandList[index].name
-                      : _defaultName,
-                ),
-              )
-            ],
-          );
-        },
-      ),
-    );
+    return _jBrandList.length > 0
+        ? Container(
+            height: ScreenAdapter.height(234),
+            padding: EdgeInsets.all(ScreenAdapter.width(20)),
+            child: ListView.builder(
+              // 水平滑动的listView
+              scrollDirection: Axis.horizontal,
+              itemCount: _jBrandList.length,
+              itemBuilder: (contxt, index) {
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      height: ScreenAdapter.height(140),
+                      width: ScreenAdapter.width(140),
+                      margin: EdgeInsets.only(right: ScreenAdapter.width(21)),
+                      child: Image.network(
+                        _jBrandList[index].logo != '' &&
+                                _jBrandList[index].logo != null &&
+                                _jBrandList[index].logo.contains(".png")
+                            ? _jBrandList[index].logo
+                            : _defaultImage,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: ScreenAdapter.height(10),
+                      ),
+                      height: ScreenAdapter.height(44),
+                      child: Text(
+                        _jBrandList[index].name != '' &&
+                                _jBrandList[index].name != null
+                            ? _jBrandList[index].name
+                            : _defaultName,
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
+          )
+        : _loadingCircle;
   }
 
   // 推荐商品
   List<Widget> _getWidgetList() {
     var itemWidth = (ScreenAdapter.getScreenWidth() - 30) / 2;
-    return _fileDetailList.map(
-      (detail) {
-        return Container(
-          padding: EdgeInsets.all(10),
-          width: itemWidth,
-          decoration: BoxDecoration(
-            border:
-                Border.all(color: Color.fromRGBO(233, 233, 233, 0.9), width: 1),
-          ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                // 设置此Container铺满外层组件
-                width: double.infinity,
-                child: AspectRatio(
-                  // 防止服务器返回的图片大小不一致导致高度不一致问题
-                  aspectRatio: 1 / 1,
-                  child: Image.network(
-                    detail.filePath != null &&
-                            detail.filePath != '' &&
-                            (detail.filePath.contains('.jpg') ||
-                                detail.filePath.contains(".png") ||
-                                detail.filePath.contains(".jpeg"))
-                        ? detail.filePath
-                        : _defaultImage,
-                    fit: BoxFit.cover,
-                  ),
+    return _fileDetailList.length > 0
+        ? _fileDetailList.map(
+            (detail) {
+              return Container(
+                padding: EdgeInsets.all(10),
+                width: itemWidth,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color.fromRGBO(233, 233, 233, 0.9), width: 1),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
-                child: Text(
-                  detail.fileName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.black54),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
-                child: Stack(
+                child: Column(
                   children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "¥188.0",
-                        style: TextStyle(color: Colors.red, fontSize: 16),
+                    Container(
+                      // 设置此Container铺满外层组件
+                      width: double.infinity,
+                      child: AspectRatio(
+                        // 防止服务器返回的图片大小不一致导致高度不一致问题
+                        aspectRatio: 1 / 1,
+                        child: Image.network(
+                          detail.filePath != null &&
+                                  detail.filePath != '' &&
+                                  (detail.filePath.contains('.jpg') ||
+                                      detail.filePath.contains(".png") ||
+                                      detail.filePath.contains(".jpeg"))
+                              ? detail.filePath
+                              : _defaultImage,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
+                    Padding(
+                      padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
                       child: Text(
-                        "¥198.0",
-                        style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 14,
-                            decoration: TextDecoration.lineThrough),
+                        detail.fileName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "¥188.0",
+                              style: TextStyle(color: Colors.red, fontSize: 16),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "¥198.0",
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                  decoration: TextDecoration.lineThrough),
+                            ),
+                          )
+                        ],
                       ),
                     )
                   ],
                 ),
-              )
-            ],
-          ),
-        );
-      },
-    ).toList();
+              );
+            },
+          ).toList()
+        : _loadingCircle(true);
   }
 
   @override
