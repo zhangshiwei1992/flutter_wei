@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_wei/constants/Result.dart';
-import 'package:flutter_wei/model/file/FileDetail.dart';
-import 'package:flutter_wei/model/vehicle/VehicleBrand.dart';
+import 'package:flutter_wei/model/FileDetail.dart';
+import 'package:flutter_wei/model/VehicleBrand.dart';
 import 'package:flutter_wei/utils/HttpUtils.dart';
 
 import '../../config/ScreenAdaper.dart';
@@ -96,35 +96,29 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           )
-        : _loadingCircle(true);
+        : _loadingCircle();
   }
 
   // 加载中的圈圈
-  Widget _loadingCircle(bool hasMore) {
-    if (hasMore) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '加载中...',
-                style: TextStyle(fontSize: 16),
-              ),
-              CircularProgressIndicator(
-                strokeWidth: 1,
-              ),
-            ],
-          ),
+  Widget _loadingCircle() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              '加载中...',
+              style: TextStyle(fontSize: 16),
+            ),
+            CircularProgressIndicator(
+              strokeWidth: 1,
+            ),
+          ],
         ),
-      );
-    } else {
-      return Center(
-        child: Text('我是有底线的!'),
-      );
-    }
+      ),
+    );
   }
 
   Widget _titleWidget(textString) {
@@ -194,7 +188,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           )
-        : _loadingCircle;
+        : _loadingCircle();
   }
 
   // 推荐商品
@@ -268,7 +262,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ).toList()
-        : _loadingCircle(true);
+        : _loadingCircle();
   }
 
   @override

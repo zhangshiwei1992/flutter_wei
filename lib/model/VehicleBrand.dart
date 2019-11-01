@@ -2,7 +2,7 @@ class VehicleBrand {
   String apiProductCode;
   String creator;
   String fullName;
-  int id;
+  Object id;
   String initial;
   String isDeleted;
   String logo;
@@ -11,18 +11,19 @@ class VehicleBrand {
   int openApiId;
   String status;
 
-  VehicleBrand(
-      {this.apiProductCode,
-      this.creator,
-      this.fullName,
-      this.id,
-      this.initial,
-      this.isDeleted,
-      this.logo,
-      this.modifier,
-      this.name,
-      this.openApiId,
-      this.status});
+  VehicleBrand({
+    this.apiProductCode,
+    this.creator,
+    this.fullName,
+    this.id,
+    this.initial,
+    this.isDeleted,
+    this.logo,
+    this.modifier,
+    this.name,
+    this.openApiId,
+    this.status,
+  });
 
   VehicleBrand.fromJson(Map<String, dynamic> json) {
     apiProductCode = json['apiProductCode'];
