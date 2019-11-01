@@ -27,6 +27,10 @@ dependencies:
   flutter_swiper: ^1.1.6
   # 不同终端屏幕适配
   flutter_screenutil: ^0.5.3
+  # 本地存储
+  shared_preferences: ^0.5.4+3
+  # http
+  dio: ^2.0.4
 
 dev_dependencies:
   flutter_test:
