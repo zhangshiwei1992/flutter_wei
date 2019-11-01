@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_wei/config/ScreenAdaper.dart';
 import 'package:flutter_wei/constants/Result.dart';
 import 'package:flutter_wei/model/FileDetail.dart';
 import 'package:flutter_wei/model/VehicleBrand.dart';
 import 'package:flutter_wei/utils/HttpUtils.dart';
-
-import '../../config/ScreenAdaper.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -14,7 +13,11 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   List<VehicleBrand> _bBrandList = [];
   List<VehicleBrand> _jBrandList = [];
   List<FileDetail> _fileDetailList = [];

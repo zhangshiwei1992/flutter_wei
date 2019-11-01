@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/pages/search/Search.dart';
+import 'package:flutter_wei/pages/Search.dart';
 
-import '../pages/tabs/Tabs.dart';
+import 'package:flutter_wei/pages/Tabs.dart';
 
 // 配置路由
 final routes = {
