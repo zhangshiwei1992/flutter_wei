@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_wei/config/LoadingWidget.dart';
 import 'package:flutter_wei/config/ScreenAdaper.dart';
 import 'package:flutter_wei/constants/Result.dart';
 import 'package:flutter_wei/model/FileDetail.dart';
@@ -99,31 +100,7 @@ class _HomePageState extends State<HomePage>
               ),
             ),
           )
-        : _loadingCircle();
-  }
-
-  // 加载中的圈圈
-  Widget _loadingCircle() {
-    return Container(
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '加载中...',
-                style: TextStyle(fontSize: 16),
-              ),
-              CircularProgressIndicator(
-                strokeWidth: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+        : LoadingWidget();
   }
 
   // 标题行
@@ -194,7 +171,7 @@ class _HomePageState extends State<HomePage>
               },
             ),
           )
-        : _loadingCircle();
+        : LoadingWidget();
   }
 
   // 推荐商品
