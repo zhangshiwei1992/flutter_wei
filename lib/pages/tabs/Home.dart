@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage>
                   return new Image.network(
                     _bBrandList[index].logo != '' &&
                             _bBrandList[index].logo != null &&
-                            _jBrandList[index].logo.contains(".png")
+                            _bBrandList[index].logo.contains(".png")
                         ? _bBrandList[index].logo
                         : _defaultImage,
                     fit: BoxFit.fill,
@@ -104,26 +104,29 @@ class _HomePageState extends State<HomePage>
 
   // 加载中的圈圈
   Widget _loadingCircle() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '加载中...',
-              style: TextStyle(fontSize: 16),
-            ),
-            CircularProgressIndicator(
-              strokeWidth: 1,
-            ),
-          ],
+    return Container(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '加载中...',
+                style: TextStyle(fontSize: 16),
+              ),
+              CircularProgressIndicator(
+                strokeWidth: 1,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  // 标题行
   Widget _titleWidget(textString) {
     return Container(
       height: ScreenAdapter.height(32),
@@ -158,7 +161,7 @@ class _HomePageState extends State<HomePage>
               // 水平滑动的listView
               scrollDirection: Axis.horizontal,
               itemCount: _jBrandList.length,
-              itemBuilder: (contxt, index) {
+              itemBuilder: (context, index) {
                 return Column(
                   children: <Widget>[
                     Container(
@@ -195,77 +198,78 @@ class _HomePageState extends State<HomePage>
   }
 
   // 推荐商品
-  List<Widget> _getWidgetList() {
+  Widget _recProductListWidget() {
     var itemWidth = (ScreenAdapter.getScreenWidth() - 30) / 2;
-    return _fileDetailList.length > 0
-        ? _fileDetailList.map(
-            (detail) {
-              return Container(
-                padding: EdgeInsets.all(10),
-                width: itemWidth,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color.fromRGBO(233, 233, 233, 0.9), width: 1),
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Wrap(
+        runSpacing: 10,
+        spacing: 10,
+        children: this._fileDetailList.map((detail) {
+          String _filePath = detail.filePath;
+          String _path = _filePath != null &&
+                  _filePath != '' &&
+                  (_filePath.contains('.jpg') ||
+                      _filePath.contains('.png') ||
+                      _filePath.contains('.jpeg'))
+              ? _filePath
+              : _defaultImage;
+          return Container(
+            padding: EdgeInsets.all(10),
+            width: itemWidth,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: Color.fromRGBO(233, 233, 233, 0.9), width: 1)),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  child: AspectRatio(
+                    // 防止服务器返回的图片大小不一致导致高度不一致问题
+                    aspectRatio: 1 / 1,
+                    child: Image.network(
+                      _path,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      // 设置此Container铺满外层组件
-                      width: double.infinity,
-                      child: AspectRatio(
-                        // 防止服务器返回的图片大小不一致导致高度不一致问题
-                        aspectRatio: 1 / 1,
-                        child: Image.network(
-                          detail.filePath != null &&
-                                  detail.filePath != '' &&
-                                  (detail.filePath.contains('.jpg') ||
-                                      detail.filePath.contains(".png") ||
-                                      detail.filePath.contains(".jpeg"))
-                              ? detail.filePath
-                              : _defaultImage,
-                          fit: BoxFit.cover,
+                Padding(
+                  padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
+                  child: Text(
+                    "${detail.fileName}",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
+                  child: Stack(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "¥${detail.id.toString()}",
+                          style: TextStyle(color: Colors.red, fontSize: 16),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
-                      child: Text(
-                        detail.fileName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
-                      child: Stack(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "¥188.0",
-                              style: TextStyle(color: Colors.red, fontSize: 16),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              "¥198.0",
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.lineThrough),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ).toList()
-        : _loadingCircle();
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("¥${detail.fileId.toString()}",
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                                decoration: TextDecoration.lineThrough)),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   @override
@@ -279,14 +283,7 @@ class _HomePageState extends State<HomePage>
         _titleWidget("猜你喜欢"),
         _hotProductListWidget(),
         _titleWidget("热门推荐"),
-        Container(
-          padding: EdgeInsets.all(10),
-          child: Wrap(
-            runSpacing: 10,
-            spacing: 10,
-            children: _getWidgetList(),
-          ),
-        ),
+        _recProductListWidget(),
       ],
     );
   }
