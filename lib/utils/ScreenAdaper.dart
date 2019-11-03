@@ -35,4 +35,11 @@ class ScreenAdapter {
   static getScreenWidth() {
     return ScreenUtil.screenWidthDp;
   }
+
+  /**
+   * 获取计算后的字体大小
+   */
+  static size(double value) {
+    return ScreenUtil.getInstance().setSp(value);
+  }
 }

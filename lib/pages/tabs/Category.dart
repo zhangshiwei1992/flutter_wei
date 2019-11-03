@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/config/ScreenAdaper.dart';
+import 'package:flutter_wei/utils/ScreenAdaper.dart';
 import 'package:flutter_wei/constants/Result.dart';
 import 'package:flutter_wei/model/CapitalDetail.dart';
 import 'package:flutter_wei/model/Order.dart';

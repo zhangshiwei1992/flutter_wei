@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_wei/config/LoadingWidget.dart';
-import 'package:flutter_wei/config/ScreenAdaper.dart';
+import 'package:flutter_wei/utils/ScreenAdaper.dart';
 import 'package:flutter_wei/constants/Result.dart';
 import 'package:flutter_wei/model/FileDetail.dart';
 import 'package:flutter_wei/model/VehicleBrand.dart';

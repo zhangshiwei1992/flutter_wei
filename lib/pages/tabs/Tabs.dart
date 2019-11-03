@@ -3,6 +3,7 @@ import 'package:flutter_wei/pages/tabs/Cart.dart';
 import 'package:flutter_wei/pages/tabs/Category.dart';
 import 'package:flutter_wei/pages/tabs/Home.dart';
 import 'package:flutter_wei/pages/tabs/User.dart';
+import 'package:flutter_wei/utils/ScreenAdaper.dart';
 
 class Tabs extends StatefulWidget {
   Tabs({Key key}) : super(key: key);
@@ -30,15 +31,51 @@ class _TabsState extends State<Tabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("jdshop"),
-      ),
+      appBar: _currentIndex != 3
+          ? AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.center_focus_weak,
+                    size: 28, color: Colors.black87),
+                onPressed: null,
+              ),
+              title: InkWell(
+                child: Container(
+                  height: ScreenAdapter.height(68),
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(233, 233, 233, 0.8),
+                      borderRadius: BorderRadius.circular(30)),
+                  padding: EdgeInsets.only(left: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.search),
+                      Text("笔记本",
+                          style: TextStyle(fontSize: ScreenAdapter.size(28)))
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, '/search');
+                },
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.message, size: 28, color: Colors.black87),
+                  onPressed: null,
+                )
+              ],
+            )
+          : AppBar(
+              title: Text("用户中心"),
+            ),
       body: PageView(
         controller: this._pageController,
         children: this._pageList,
-        // onPageChanged: (){
-
-        // },
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: this._currentIndex,
