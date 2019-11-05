@@ -11,6 +11,11 @@ class Storage {
     prefs.getString(key);
   }
 
+  static Future<void> remove(key) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.remove(key);
+  }
+
   static Future<void> clear() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();

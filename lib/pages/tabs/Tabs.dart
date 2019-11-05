@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/pages/tabs/Cart.dart';
-import 'package:flutter_wei/pages/tabs/Category.dart';
-import 'package:flutter_wei/pages/tabs/Home.dart';
-import 'package:flutter_wei/pages/tabs/User.dart';
-import 'package:flutter_wei/utils/ScreenAdaper.dart';
+
+import '../../pages/tabs/Cart.dart';
+import '../../pages/tabs/Category.dart';
+import '../../pages/tabs/Home.dart';
+import '../../pages/tabs/User.dart';
+import '../../utils/ScreenAdaper.dart';
 
 class Tabs extends StatefulWidget {
   Tabs({Key key}) : super(key: key);

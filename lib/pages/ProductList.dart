@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/config/LoadingWidget.dart';
-import 'package:flutter_wei/constants/Result.dart';
-import 'package:flutter_wei/model/FileDetail.dart';
-import 'package:flutter_wei/utils/HttpUtils.dart';
-import 'package:flutter_wei/utils/ScreenAdaper.dart';
+
+import '../config/LoadingWidget.dart';
+import '../constants/Result.dart';
+import '../model/FileDetail.dart';
+import '../service/SearchServices.dart';
+import '../utils/HttpUtils.dart';
+import '../utils/ScreenAdaper.dart';
 
 class ProductListPage extends StatefulWidget {
   Map arguments;
@@ -32,14 +34,32 @@ class _ProductListPageState extends State<ProductListPage> {
   // 能否发起请求获取更多数据的标识
   bool canPostFlag = true;
 
+  // 是否有搜索的数据
+  bool _hasData = true;
+
   List<FileDetail> _fileDetailList = [];
   String _defaultImage =
       "http://biz-oss-dev.miaogoche.cn/zulin/bizImage/F_FC15302410810000000027_V15637857830000002549_0.png?Expires=4719486988&OSSAccessKeyId=LTAIFVdn88UX5oys&Signature=VqVKTd%2B8Ojh6EuQhRaKdXR0v5Nw%3D";
+
+  // 配置search搜索框的值
+  var _initKeywordsController = new TextEditingController();
+
+  // 分类页面传入的二级目录值: 订单编号
+  var _orderCode;
+
+  // 头部搜索栏出入的值
+  var _keywords;
 
   @override
   void initState() {
     super.initState();
     _getFileDetailPage();
+
+    this._orderCode = widget.arguments["orderCode"];
+
+    this._keywords = widget.arguments["keywords"];
+    // 给search框框赋值
+    this._initKeywordsController.text = this._keywords;
 
     // 监听滚动条滚动事件
     _scrollController.addListener(() {
@@ -48,7 +68,6 @@ class _ProductListPageState extends State<ProductListPage> {
           _scrollController.position.maxScrollExtent - 20) {
         if (this.canPostFlag && this._hasMore) {
           _getFileDetailPage();
-          print('=======向上滑动=======加载更多=======');
         }
       }
     });
@@ -58,17 +77,29 @@ class _ProductListPageState extends State<ProductListPage> {
     setState(() {
       this.canPostFlag = false;
     });
-    Result result = await dioPost(
-      "/fileDetail/findPage",
-      {
+
+    var _requestBody = {};
+    if (_keywords == null) {
+      _requestBody = {
         "extraInfo": {},
         "pageNum": _pageNum,
         "pageSize": _pageSize,
         "param": {
-          'businessCode': widget.arguments['orderCode'],
+          'businessCode': _orderCode,
         },
-      },
-    );
+      };
+    } else {
+      _requestBody = {
+        "extraInfo": {},
+        "pageNum": _pageNum,
+        "pageSize": _pageSize,
+        "param": {
+          'fileName': _keywords,
+        },
+      };
+    }
+
+    Result result = await dioPost("/fileDetail/findPage", _requestBody);
 
     setState(() {
       List _list = result.value;
@@ -84,6 +115,15 @@ class _ProductListPageState extends State<ProductListPage> {
         this._pageNum++;
       }
     });
+
+    // 判断是否有搜索数据
+    if (_fileDetailList.length == 0 && this._pageNum == 1) {
+      setState(() {
+        this._hasData = false;
+      });
+    } else {
+      this._hasData = true;
+    }
   }
 
   Future<void> _freshList() async {
@@ -338,23 +378,57 @@ class _ProductListPageState extends State<ProductListPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("商品列表"),
-// 隐藏左侧返回箭头
-//        leading: Text(""),
-        // 隐藏右侧侧拉框按钮
-        actions: <Widget>[Text("")],
+        title: Container(
+          child: TextField(
+            controller: this._initKeywordsController,
+            autofocus: false,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none),
+            ),
+            onChanged: (value) {
+              setState(() {
+                this._keywords = value;
+              });
+            },
+          ),
+          height: ScreenAdapter.height(68),
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(233, 233, 233, 0.8),
+              borderRadius: BorderRadius.circular(30)),
+        ),
+        actions: <Widget>[
+          InkWell(
+            child: Container(
+              height: ScreenAdapter.height(68),
+              width: ScreenAdapter.width(80),
+              child: Row(
+                children: <Widget>[Text("搜索")],
+              ),
+            ),
+            onTap: () {
+              SearchServices.setHistoryData(this._keywords);
+              this._subHeaderChange(1);
+            },
+          ),
+        ],
       ),
       endDrawer: Drawer(
         child: Container(
           child: Text("实现筛选功能"),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          _productListWidget(),
-          _subHeaderWidget(),
-        ],
-      ),
+      body: _hasData
+          ? Stack(
+              children: <Widget>[
+                _productListWidget(),
+                _subHeaderWidget(),
+              ],
+            )
+          : Center(
+              child: Text("没有您要浏览的数据"),
+            ),
     );
   }
 }

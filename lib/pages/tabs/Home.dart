@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:flutter_wei/config/LoadingWidget.dart';
-import 'package:flutter_wei/utils/ScreenAdaper.dart';
-import 'package:flutter_wei/constants/Result.dart';
-import 'package:flutter_wei/model/FileDetail.dart';
-import 'package:flutter_wei/model/VehicleBrand.dart';
-import 'package:flutter_wei/utils/HttpUtils.dart';
+
+import '../../config/LoadingWidget.dart';
+import '../../constants/Result.dart';
+import '../../model/FileDetail.dart';
+import '../../model/VehicleBrand.dart';
+import '../../utils/HttpUtils.dart';
+import '../../utils/ScreenAdaper.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -174,6 +175,17 @@ class _HomePageState extends State<HomePage>
         : LoadingWidget();
   }
 
+  String _filePath(_filePath) {
+    String _path = _filePath != '' &&
+            _filePath != null &&
+            (_filePath.contains(".png") ||
+                _filePath.contains('.jpg') ||
+                _filePath.contains('.jpeg'))
+        ? _filePath
+        : _defaultImage;
+    return _path;
+  }
+
   // 推荐商品
   Widget _recProductListWidget() {
     var itemWidth = (ScreenAdapter.getScreenWidth() - 30) / 2;
@@ -183,65 +195,65 @@ class _HomePageState extends State<HomePage>
         runSpacing: 10,
         spacing: 10,
         children: this._fileDetailList.map((detail) {
-          String _filePath = detail.filePath;
-          String _path = _filePath != null &&
-                  _filePath != '' &&
-                  (_filePath.contains('.jpg') ||
-                      _filePath.contains('.png') ||
-                      _filePath.contains('.jpeg'))
-              ? _filePath
-              : _defaultImage;
-          return Container(
-            padding: EdgeInsets.all(10),
-            width: itemWidth,
-            decoration: BoxDecoration(
-                border: Border.all(
-                    color: Color.fromRGBO(233, 233, 233, 0.9), width: 1)),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: AspectRatio(
-                    // 防止服务器返回的图片大小不一致导致高度不一致问题
-                    aspectRatio: 1 / 1,
-                    child: Image.network(
-                      _path,
-                      fit: BoxFit.cover,
+          return InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/productContent',
+                  arguments: {"id": detail.id});
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              width: itemWidth,
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color.fromRGBO(233, 233, 233, 0.9), width: 1)),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    child: AspectRatio(
+                      // 防止服务器返回的图片大小不一致导致高度不一致问题
+                      aspectRatio: 1 / 1,
+                      child: Image.network(
+                        _filePath(detail.filePath),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
-                  child: Text(
-                    "${detail.fileName}",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.black54),
+                  Padding(
+                    padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
+                    child: Text(
+                      "${detail.fileName}",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.black54),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
-                  child: Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "¥${detail.id.toString()}",
-                          style: TextStyle(color: Colors.red, fontSize: 16),
+                  Padding(
+                    padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
+                    child: Stack(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "¥${detail.id.toString()}",
+                            style: TextStyle(color: Colors.red, fontSize: 16),
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text("¥${detail.fileId.toString()}",
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "¥${detail.fileId.toString()}",
                             style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 14,
-                                decoration: TextDecoration.lineThrough)),
-                      )
-                    ],
-                  ),
-                )
-              ],
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         }).toList(),

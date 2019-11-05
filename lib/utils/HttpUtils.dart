@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_wei/config/EnvInfo.dart';
-import 'package:flutter_wei/constants/Result.dart';
+
+import '../config/EnvInfo.dart';
+import '../constants/Result.dart';
 
 /// 通用的发送请求
 Future<Result> dioPost(String path, var requestBody) async {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/utils/ScreenAdaper.dart';
-import 'package:flutter_wei/constants/Result.dart';
-import 'package:flutter_wei/model/CapitalDetail.dart';
-import 'package:flutter_wei/model/Order.dart';
-import 'package:flutter_wei/utils/HttpUtils.dart';
+
+import '../../constants/Result.dart';
+import '../../model/CapitalDetail.dart';
+import '../../model/Order.dart';
+import '../../utils/HttpUtils.dart';
+import '../../utils/ScreenAdaper.dart';
 
 class CategoryPage extends StatefulWidget {
   CategoryPage({Key key}) : super(key: key);

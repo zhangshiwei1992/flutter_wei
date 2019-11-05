@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wei/pages/ProductList.dart';
-import 'package:flutter_wei/pages/Search.dart';
-import 'package:flutter_wei/pages/tabs/Tabs.dart';
+
+import '../pages/ProductContent.dart';
+import '../pages/ProductList.dart';
+import '../pages/Search.dart';
+import '../pages/tabs/Tabs.dart';
 
 // 配置路由
 final routes = {
@@ -9,6 +11,8 @@ final routes = {
   '/search': (context) => SearchPage(),
   '/productList': (context, {arguments}) =>
       ProductListPage(arguments: arguments),
+  '/productContent': (context, {arguments}) =>
+      ProductContentPage(arguments: arguments),
 };
 
 var onGenerateRoute = (RouteSettings settings) {
