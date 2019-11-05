@@ -13,6 +13,7 @@ class JdButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('1111111');
     ScreenAdapter.init(context);
     return InkWell(
       onTap: this.cb,
