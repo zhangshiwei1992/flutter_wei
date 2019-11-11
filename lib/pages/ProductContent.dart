@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_wei/model/FileDetail.dart';
+import 'package:flutter_wei/model/Result.dart';
+import 'package:flutter_wei/model/VehicleType.dart';
+import 'package:flutter_wei/utils/HttpUtils.dart';
 
 import '../utils/ScreenAdaper.dart';
 import '../widget/JdButton.dart';
@@ -8,6 +12,7 @@ import 'ProductContent/ProductContentSecond.dart';
 import 'ProductContent/ProductContentThird.dart';
 
 class ProductContentPage extends StatefulWidget {
+  static final String routerName = "/productContent";
   final Map arguments;
 
   ProductContentPage({Key key, this.arguments}) : super(key: key);
@@ -16,6 +21,54 @@ class ProductContentPage extends StatefulWidget {
 }
 
 class _ProductContentPageState extends State<ProductContentPage> {
+  FileDetail _fileDetail = new FileDetail();
+  VehicleType vehicleType = new VehicleType();
+  List vehicleTypeList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _findFileDetailById();
+    _getVehicleType();
+  }
+
+  // 附件详情
+  _findFileDetailById() async {
+    var fileDetailId = widget.arguments['id'];
+    if (fileDetailId == null || fileDetailId == '') {
+      fileDetailId = 781361;
+    }
+    Result result =
+        await dioPost("/fileDetail/findByPrimaryKey", {"id": fileDetailId});
+    setState(() {
+      if (result.success && result.value != null) {
+        _fileDetail = FileDetail.fromJson(result.value);
+      }
+    });
+  }
+
+  // 车型信息
+  _getVehicleType() async {
+    var vehicleBrandId = widget.arguments['vehicleBrandId'];
+    if (vehicleBrandId == null || vehicleBrandId == '') {
+      vehicleBrandId = 1;
+    }
+    Result result =
+        await dioPost("/vehicleType/findList", {"brandId": vehicleBrandId});
+    setState(() {
+      if (result.success && result.value != null) {
+        print('result.value ---------- --' + result.value.length().toString());
+        result.value.forEach((type) {
+          vehicleTypeList.add(VehicleType.fromJson(type));
+        });
+        vehicleType = VehicleType.fromJson(vehicleTypeList.first);
+        print('vehicleType======name======' + vehicleType.name);
+        print('vehicleType======name======' + vehicleType.name);
+        print('vehicleType======name======' + vehicleType.name);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -49,6 +102,7 @@ class _ProductContentPageState extends State<ProductContentPage> {
             IconButton(
               icon: Icon(Icons.more_horiz),
               onPressed: () {
+                // 下拉菜单
                 showMenu(
                   context: context,
                   position: RelativeRect.fromLTRB(
@@ -74,7 +128,8 @@ class _ProductContentPageState extends State<ProductContentPage> {
           children: <Widget>[
             TabBarView(
               children: <Widget>[
-                ProductContentFirst(),
+                ProductContentFirst(
+                    fileDetail: _fileDetail, vehicleType: vehicleType),
                 ProductContentSecond(),
                 ProductContentThird()
               ],
@@ -85,13 +140,15 @@ class _ProductContentPageState extends State<ProductContentPage> {
               bottom: 0,
               child: Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black26, width: 1)),
-                    color: Colors.white),
+                  border: Border(
+                    top: BorderSide(color: Colors.black26, width: 1),
+                  ),
+                  color: Colors.white,
+                ),
                 child: Row(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.only(top: ScreenAdapter.height(10)),
+                      padding: EdgeInsets.only(top: ScreenAdapter.height(3)),
                       width: 100,
                       height: ScreenAdapter.height(88),
                       child: Column(

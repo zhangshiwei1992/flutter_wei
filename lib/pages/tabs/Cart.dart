@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CartPage extends StatefulWidget {
+  static final String routerName = "/cart";
+
   CartPage({Key key}) : super(key: key);
 
   _CartPageState createState() => _CartPageState();

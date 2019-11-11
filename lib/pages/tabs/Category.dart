@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wei/constants/app_constant.dart';
+import 'package:flutter_wei/model/Result.dart';
 
-import '../../constants/Result.dart';
 import '../../model/CapitalDetail.dart';
 import '../../model/Order.dart';
 import '../../utils/HttpUtils.dart';
 import '../../utils/ScreenAdaper.dart';
+import '../ProductList.dart';
 
 class CategoryPage extends StatefulWidget {
+  static final String routerName = "/category";
+
   CategoryPage({Key key}) : super(key: key);
 
   _CategoryPageState createState() => _CategoryPageState();
@@ -16,9 +20,6 @@ class _CategoryPageState extends State<CategoryPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
-  String _defaultImage =
-      "http://biz-oss-dev.miaogoche.cn/zulin/bizImage/F_FC15302410810000000017_GPS_O_15638127740000000741_0.png?Expires=4719486397&OSSAccessKeyId=LTAIFVdn88UX5oys&Signature=TB6sctRhQnUltL1qy6tOPEbvavE%3D";
 
   int _selectIndex = 0;
   List _capitalDetailList = [];
@@ -107,68 +108,76 @@ class _CategoryPageState extends State<CategoryPage>
       return Expanded(
         flex: 1,
         child: Container(
-            padding: EdgeInsets.all(10),
-            height: double.infinity,
-            color: Color.fromRGBO(240, 246, 246, 0.9),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: rightItemWidth / rightItemHeight,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10),
-              itemCount: this._orderList.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/productList', arguments: {
-                      "orderCode": this._orderList[index].orderCode
-                    });
-                  },
-                  child: Container(
-                    // padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: <Widget>[
-                        AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: Image.network("${_defaultImage}",
-                              fit: BoxFit.cover),
-                        ),
-                        Container(
-                          height: ScreenAdapter.height(28),
-                          child: Text("${this._orderList[index].orderCode}"),
-                        )
-                      ],
+          padding: EdgeInsets.all(10),
+          height: double.infinity,
+          color: Color.fromRGBO(240, 246, 246, 0.9),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: rightItemWidth / rightItemHeight,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10),
+            itemCount: this._orderList.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Map argumentsMap = {
+                    "orderCode": "${this._orderList[index].orderCode}",
+                    "_keywords": "",
+                  };
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductListPage(
+                        arguments: argumentsMap,
+                      ),
                     ),
+                  );
+                },
+                child: Container(
+                  // padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: <Widget>[
+                      AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: Image.network("${AppConstant.defaultImage}",
+                            fit: BoxFit.cover),
+                      ),
+                      Container(
+                        height: ScreenAdapter.height(28),
+                        child: Text("${this._orderList[index].orderCode}"),
+                      )
+                    ],
                   ),
-                );
-              },
-            )),
+                ),
+              );
+            },
+          ),
+        ),
       );
     } else {
       return Expanded(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.all(10),
-            height: double.infinity,
-            color: Color.fromRGBO(240, 246, 246, 0.9),
-            child: Text("加载中..."),
-          ));
+        flex: 1,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          height: double.infinity,
+          color: Color.fromRGBO(240, 246, 246, 0.9),
+          child: Text("加载中..."),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //注意用ScreenAdapter必须得在build方法里面初始化
-    ScreenAdapter.init(context);
-
-    //左侧宽度
+    // 左侧宽度
     var leftWidth = ScreenAdapter.getScreenWidth() / 4;
-    //右侧每一项宽度=（总宽度-左侧宽度-GridView外侧元素左右的Padding值-GridView中间的间距）/3
+    // 右侧每一项宽度=（总宽度-左侧宽度-GridView外侧元素左右的Padding值-GridView中间的间距）/3
     var rightItemWidth =
         (ScreenAdapter.getScreenWidth() - leftWidth - 20 - 20) / 3;
-    //获取计算后的宽度
-    rightItemWidth = ScreenAdapter.width(rightItemWidth);
-    //获取计算后的高度
+    // 获取计算后的宽度
+    rightItemWidth = ScreenAdapter.width(rightItemWidth.toInt());
+    // 获取计算后的高度
     var rightItemHeight = rightItemWidth + ScreenAdapter.height(28);
 
     return Row(

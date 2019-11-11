@@ -4,6 +4,7 @@ import '../config/Storage.dart';
 
 class SearchServices {
   static setHistoryData(keywords) async {
+    print('将搜索数据放入历史记录中...........开始');
     /*
           1、获取本地存储里面的数据  (searchList)
           2、判断本地存储是否有数据
@@ -15,11 +16,15 @@ class SearchServices {
               2.2、如果没有数据
                     直接把当前数据放在数组中写入到本地存储
       */
-
     try {
       List searchListData = json.decode(await Storage.getString('searchList'));
 
+      print('历史数据:' + searchListData.length.toString());
+      print('历史数据:' + searchListData.length.toString());
+      print('历史数据:' + searchListData.length.toString());
+
       print(searchListData);
+
       var hasData = searchListData.any((value) {
         return value == keywords;
       });
@@ -27,10 +32,12 @@ class SearchServices {
         searchListData.add(keywords);
         await Storage.setString('searchList', json.encode(searchListData));
       }
+      print('将搜索数据放入历史记录中...........结束');
     } catch (e) {
       List tempList = new List();
       tempList.add(keywords);
       await Storage.setString('searchList', json.encode(tempList));
+      print('将搜索数据放入历史记录中...........异常');
     }
   }
 

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_wei/constants/app_constant.dart';
+import 'package:flutter_wei/model/Result.dart';
 
 import '../../config/LoadingWidget.dart';
-import '../../constants/Result.dart';
 import '../../model/FileDetail.dart';
 import '../../model/VehicleBrand.dart';
 import '../../utils/HttpUtils.dart';
 import '../../utils/ScreenAdaper.dart';
+import '../ProductContent.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -23,8 +25,6 @@ class _HomePageState extends State<HomePage>
   List<VehicleBrand> _bBrandList = [];
   List<VehicleBrand> _jBrandList = [];
   List<FileDetail> _fileDetailList = [];
-  String _defaultImage =
-      "http://biz-oss-dev.miaogoche.cn/zulin/bizImage/F_FC15302410810000000017_GPS_O_15638127740000000741_0.png?Expires=4719486397&OSSAccessKeyId=LTAIFVdn88UX5oys&Signature=TB6sctRhQnUltL1qy6tOPEbvavE%3D";
   String _defaultName = "卡丁车";
 
   @override
@@ -81,23 +81,35 @@ class _HomePageState extends State<HomePage>
   // 轮播图
   Widget _swiperWidget() {
     return _bBrandList.length > 0
-        ? Container(
-            child: AspectRatio(
-              aspectRatio: 2 / 1,
-              child: Swiper(
-                itemBuilder: (BuildContext context, int index) {
-                  return new Image.network(
-                    _bBrandList[index].logo != '' &&
-                            _bBrandList[index].logo != null &&
-                            _bBrandList[index].logo.contains(".png")
-                        ? _bBrandList[index].logo
-                        : _defaultImage,
-                    fit: BoxFit.fill,
-                  );
-                },
-                itemCount: _bBrandList.length,
-                pagination: new SwiperPagination(),
-                autoplay: true,
+        ? InkWell(
+            onTap: () {
+              Map argumentsMap = {
+                "id": "",
+                "_keywords": "",
+                "vehicleBrandId": "${_bBrandList[0].id}",
+              };
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProductContentPage(arguments: argumentsMap),
+                ),
+              );
+            },
+            child: Container(
+              child: AspectRatio(
+                aspectRatio: 2 / 1,
+                child: Swiper(
+                  itemBuilder: (BuildContext context, int index) {
+                    return new Image.network(
+                      _filePath(_bBrandList[index].logo),
+                      fit: BoxFit.fill,
+                    );
+                  },
+                  itemCount: _bBrandList.length,
+                  pagination: new SwiperPagination(),
+                  autoplay: true,
+                ),
               ),
             ),
           )
@@ -147,11 +159,7 @@ class _HomePageState extends State<HomePage>
                       width: ScreenAdapter.width(140),
                       margin: EdgeInsets.only(right: ScreenAdapter.width(21)),
                       child: Image.network(
-                        _jBrandList[index].logo != '' &&
-                                _jBrandList[index].logo != null &&
-                                _jBrandList[index].logo.contains(".png")
-                            ? _jBrandList[index].logo
-                            : _defaultImage,
+                        _filePath(_jBrandList[index].logo),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -182,7 +190,7 @@ class _HomePageState extends State<HomePage>
                 _filePath.contains('.jpg') ||
                 _filePath.contains('.jpeg'))
         ? _filePath
-        : _defaultImage;
+        : AppConstant.defaultImage;
     return _path;
   }
 
@@ -197,8 +205,18 @@ class _HomePageState extends State<HomePage>
         children: this._fileDetailList.map((detail) {
           return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/productContent',
-                  arguments: {"id": detail.id});
+              Map argumentsMap = {
+                "id": "${detail.id}",
+                "_keywords": "",
+                "vehicleBrandId": "",
+              };
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProductContentPage(arguments: argumentsMap),
+                ),
+              );
             },
             child: Container(
               padding: EdgeInsets.all(10),
@@ -263,8 +281,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    ScreenAdapter.init(context);
-
     return ListView(
       children: <Widget>[
         _swiperWidget(),

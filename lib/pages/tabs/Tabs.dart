@@ -1,36 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wei/constants/app_style.dart';
+import 'package:flutter_wei/utils/permission_util.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-import '../../pages/tabs/Cart.dart';
-import '../../pages/tabs/Category.dart';
-import '../../pages/tabs/Home.dart';
-import '../../pages/tabs/User.dart';
 import '../../utils/ScreenAdaper.dart';
+import 'Cart.dart';
+import 'Category.dart';
+import 'Home.dart';
+import 'User.dart';
 
 class Tabs extends StatefulWidget {
+  static final String routerName = "/tabs";
+
   Tabs({Key key}) : super(key: key);
 
   _TabsState createState() => _TabsState();
 }
 
-class _TabsState extends State<Tabs> {
+class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
+
+  TabController _tabController;
   PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = new TabController(length: 4, vsync: this);
     this._pageController = new PageController(initialPage: this._currentIndex);
+    checkSystemAuth();
   }
 
-  List<Widget> _pageList = [
-    HomePage(),
-    CategoryPage(),
-    CartPage(),
-    UserPage(),
-  ];
+  /// 检查系统权限：照相机、相册、通讯
+  checkSystemAuth() async {
+    /// 在刚进入app首页的时候，只需要先确保访问：location,contacts 其他的权限：camera,storage,contacts, phone,photos,在需要使用的时候再进行授权
+    PermissionUtil.requestPermissions([
+      PermissionGroup.location,
+      PermissionGroup.contacts,
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
+    ScreenAdapter.init(context);
+
     return Scaffold(
       appBar: _currentIndex != 3
           ? AppBar(
@@ -71,41 +84,55 @@ class _TabsState extends State<Tabs> {
             ),
       body: PageView(
         controller: this._pageController,
-        children: this._pageList,
+        children: [
+          HomePage(),
+          CategoryPage(),
+          CartPage(),
+          UserPage(),
+        ],
         onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          _tabController.animateTo(index);
+          _currentIndex = index;
+          print("_currentIndex=======" + _currentIndex.toString());
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: this._currentIndex,
-        onTap: (index) {
-          setState(() {
-            this._currentIndex = index;
-            this._pageController.jumpToPage(index);
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        fixedColor: Colors.red,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("首页"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            title: Text("分类"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            title: Text("购物车"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            title: Text("我的"),
-          )
-        ],
+      bottomNavigationBar: Material(
+        color: Color(AppStyle.color_white),
+        child: TabBar(
+          controller: _tabController,
+          tabs: <Tab>[
+            Tab(
+              icon: Icon(Icons.home, color: Color(AppStyle.color_yellow_f8)),
+              child: Text(
+                '首页',
+                style: TextStyle(color: Color(AppStyle.color_yellow_f8)),
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.shop, color: Color(AppStyle.color_yellow_f8)),
+              child: Text(
+                '分类',
+                style: TextStyle(color: Color(AppStyle.color_yellow_f8)),
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.explore, color: Color(AppStyle.color_yellow_f8)),
+              child: Text(
+                '购物车',
+                style: TextStyle(color: Color(AppStyle.color_yellow_f8)),
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.account_circle,
+                  color: Color(AppStyle.color_yellow_f8)),
+              child: Text('我的',
+                  style: TextStyle(color: Color(AppStyle.color_yellow_f8))),
+            ),
+          ],
+          onTap: (index) {
+            _pageController.jumpTo(MediaQuery.of(context).size.width * index);
+          },
+        ),
       ),
     );
   }

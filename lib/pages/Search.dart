@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../service/SearchServices.dart';
 import '../utils/ScreenAdaper.dart';
+import 'ProductList.dart';
 
 class SearchPage extends StatefulWidget {
+  static final String routerName = "/search";
+
   SearchPage({Key key}) : super(key: key);
 
   _SearchPageState createState() => _SearchPageState();
@@ -22,6 +26,9 @@ class _SearchPageState extends State<SearchPage> {
 
   _getHistoryData() async {
     var _historyListData = await SearchServices.getHistoryList();
+    print('!!!!!!!!!!!!!!!!!!_historyListData: ${_historyListData}');
+    print('!!!!!!!!!!!!!!!!!!_historyListData: ${_historyListData}');
+    print('!!!!!!!!!!!!!!!!!!_historyListData: ${_historyListData}');
     setState(() {
       this._historyListData = _historyListData;
     });
@@ -99,7 +106,10 @@ class _SearchPageState extends State<SearchPage> {
                       border: Border.all(color: Colors.black45, width: 1)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[Icon(Icons.delete), Text("清空历史记录")],
+                    children: <Widget>[
+                      Icon(Icons.delete),
+                      Text("清空历史记录"),
+                    ],
                   ),
                 ),
               )
@@ -112,6 +122,18 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  _storeTest() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('aaa', 'AAAAAAAAAAAAAAAAAAA');
+
+    SharedPreferences prefs2 = await SharedPreferences.getInstance();
+    String aaa = prefs2.get('aaa');
+    print('aaa============' + aaa);
+    print('aaa============' + aaa);
+    print('aaa============' + aaa);
+    SearchServices.setHistoryData(this._keywords);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,17 +142,19 @@ class _SearchPageState extends State<SearchPage> {
             child: TextField(
               autofocus: true,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none),
+              ),
               onChanged: (value) {
                 this._keywords = value;
               },
             ),
             height: ScreenAdapter.height(68),
             decoration: BoxDecoration(
-                color: Color.fromRGBO(233, 233, 233, 0.8),
-                borderRadius: BorderRadius.circular(30)),
+              color: Color.fromRGBO(233, 233, 233, 0.8),
+              borderRadius: BorderRadius.circular(30),
+            ),
           ),
           actions: <Widget>[
             InkWell(
@@ -142,9 +166,19 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               onTap: () {
-                SearchServices.setHistoryData(this._keywords);
-                Navigator.pushReplacementNamed(context, '/productList',
-                    arguments: {"keywords": this._keywords});
+                Map argumentsMap = {
+                  "orderCode": "",
+                  "_keywords": "${this._keywords}",
+                };
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductListPage(
+                      arguments: argumentsMap,
+                    ),
+                  ),
+                );
+                _storeTest();
               },
             )
           ],

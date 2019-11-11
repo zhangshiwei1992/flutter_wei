@@ -4,7 +4,7 @@ enum Env {
   LOCAL,
 }
 
-class EnvInfo {
+class EnvInfo_My {
   static Env env;
 
   static String get apiHost {
@@ -15,8 +15,8 @@ class EnvInfo {
         return "http://biz-dev.miaogoche.cn";
       case Env.LOCAL:
       default:
-//        return "http://10.0.2.2:8077";
-        return "http://biz-dev.miaogoche.cn";
+        return "http://10.0.2.2:8077";
+      //       return "http://biz-dev.miaogoche.cn";
     }
   }
 }

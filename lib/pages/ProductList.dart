@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wei/model/Result.dart';
 
 import '../config/LoadingWidget.dart';
-import '../constants/Result.dart';
 import '../model/FileDetail.dart';
 import '../service/SearchServices.dart';
 import '../utils/HttpUtils.dart';
 import '../utils/ScreenAdaper.dart';
 
 class ProductListPage extends StatefulWidget {
+  static final String routerName = "/productList";
   Map arguments;
 
   ProductListPage({Key key, this.arguments}) : super(key: key);
@@ -79,7 +80,7 @@ class _ProductListPageState extends State<ProductListPage> {
     });
 
     var _requestBody = {};
-    if (_keywords == null) {
+    if (_orderCode != null && _orderCode != '') {
       _requestBody = {
         "extraInfo": {},
         "pageNum": _pageNum,
@@ -90,12 +91,12 @@ class _ProductListPageState extends State<ProductListPage> {
       };
     } else {
       _requestBody = {
-        "extraInfo": {},
+        "extraInfo": {
+          'fileNameLike': _keywords,
+        },
         "pageNum": _pageNum,
         "pageSize": _pageSize,
-        "param": {
-          'fileName': _keywords,
-        },
+        "param": {},
       };
     }
 
@@ -373,8 +374,6 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenAdapter.init(context);
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -404,7 +403,9 @@ class _ProductListPageState extends State<ProductListPage> {
               height: ScreenAdapter.height(68),
               width: ScreenAdapter.width(80),
               child: Row(
-                children: <Widget>[Text("搜索")],
+                children: <Widget>[
+                  Text("搜索"),
+                ],
               ),
             ),
             onTap: () {
