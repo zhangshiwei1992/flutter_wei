@@ -113,10 +113,11 @@ class _CategoryPageState extends State<CategoryPage>
           color: Color.fromRGBO(240, 246, 246, 0.9),
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: rightItemWidth / rightItemHeight,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
+              crossAxisCount: 3,
+              childAspectRatio: rightItemWidth / rightItemHeight,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
             itemCount: this._orderList.length,
             itemBuilder: (context, index) {
               return InkWell(

@@ -2,17 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wei/constants/app_constant.dart';
 import 'package:flutter_wei/model/FileDetail.dart';
+import 'package:flutter_wei/model/Result.dart';
 import 'package:flutter_wei/model/VehicleType.dart';
+import 'package:flutter_wei/utils/HttpUtils.dart';
 
 import '../../utils/ScreenAdaper.dart';
 import '../../widget/JdButton.dart';
 
 class ProductContentFirst extends StatefulWidget {
   static final String routerName = "/productContentFirst";
-  final FileDetail fileDetail;
-  final VehicleType vehicleType;
+  FileDetail fileDetail;
+  var vehicleBrandId;
 
-  ProductContentFirst({this.fileDetail, this.vehicleType});
+  ProductContentFirst({this.fileDetail, this.vehicleBrandId});
 
   _ProductContentFirstState createState() => _ProductContentFirstState();
 }
@@ -20,6 +22,8 @@ class ProductContentFirst extends StatefulWidget {
 class _ProductContentFirstState extends State<ProductContentFirst> {
   List _attr = [];
 
+  VehicleType vehicleType = new VehicleType();
+  List vehicleTypeList = [];
   String _selectedValue;
 
   bool get wantKeepAlive => true;
@@ -27,16 +31,12 @@ class _ProductContentFirstState extends State<ProductContentFirst> {
   @override
   void initState() {
     super.initState();
+    _getVehicleType();
 
-    print('vehicleType=========name============' + widget.vehicleType.name);
-    print('vehicleType=========name============' + widget.vehicleType.name);
-    print('vehicleType=========name============' + widget.vehicleType.name);
-    print('vehicleType=========name============' + widget.vehicleType.name);
-    print('vehicleType=========name============' + widget.vehicleType.name);
-    this._attr = widget.vehicleType.colorList.split(",");
+    print('vehicleType=========name============' + vehicleType.name);
+    this._attr = vehicleType.colorList.split(",");
     print('_attr========================================' + _attr.toString());
-    print('_attr========================================' + _attr.toString());
-    print('_attr========================================' + _attr.toString());
+
     _initAttr();
 
     //[{"cate":"鞋面材料","list":["牛皮 "]},{"cate":"闭合方式","list":["系带"]},{"cate":"颜色","list":["红色","白色","黄色"]}]
@@ -46,13 +46,11 @@ class _ProductContentFirstState extends State<ProductContentFirst> {
    [
       {
        "cate":"尺寸",
-       list":[{
-
+       list":[{ 
             "title":"xl",
             "checked":false
           },
-          {
-
+          { 
             "title":"xxxl",
             "checked":true
           },
@@ -60,13 +58,11 @@ class _ProductContentFirstState extends State<ProductContentFirst> {
       },
       {
        "cate":"颜色",
-       list":[{
-
+       list":[{ 
             "title":"黑色",
             "checked":false
           },
-          {
-
+          { 
             "title":"白色",
             "checked":true
           },
@@ -74,6 +70,32 @@ class _ProductContentFirstState extends State<ProductContentFirst> {
       }
   ]    
    */
+  }
+
+  // 车型信息
+  _getVehicleType() async {
+    var vehicleBrandId = widget.vehicleBrandId;
+    if (vehicleBrandId == null || vehicleBrandId == '') {
+      vehicleBrandId = 1;
+    }
+    Result result = await dioPost(
+        "/vehicleType/findList", {"brandId": "${vehicleBrandId}"});
+    print("result.toString()======" + result.toString());
+    print("result.toString()======" + result.toString());
+    print("result.toString()======" + result.toString());
+    print("result.toString()======" + result.toString());
+    setState(() {
+      if (result.success && result.value != null) {
+        print('result.value ---------- --' + result.value.length().toString());
+        result.value.forEach((type) {
+          vehicleTypeList.add(VehicleType.fromJson(type));
+        });
+        vehicleType = VehicleType.fromJson(vehicleTypeList.first);
+        print('vehicleType======name======' + vehicleType.name);
+        print('vehicleType======name======' + vehicleType.name);
+        print('vehicleType======name======' + vehicleType.name);
+      }
+    });
   }
 
   String _filePath() {

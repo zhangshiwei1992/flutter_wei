@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'config/EnvInfo_my.dart';
 import 'pages/tabs/Tabs.dart';
@@ -7,6 +8,8 @@ import 'routers/AppRoutes.dart';
 void main() {
   //设定运行环境的环境变量
   EnvInfo_My.env = Env.DEV;
+  // 是否开启布局线
+  debugPaintSizeEnabled = false;
   runApp(MyApp());
 }
 

@@ -17,7 +17,7 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-  //二级导航选中判断
+  // 二级导航选中判断
   int _selectHeaderId = 1;
 
   // 侧滑控制器
@@ -383,8 +383,9 @@ class _ProductListPageState extends State<ProductListPage> {
             autofocus: false,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none),
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide.none,
+              ),
             ),
             onChanged: (value) {
               setState(() {
@@ -394,8 +395,9 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
           height: ScreenAdapter.height(68),
           decoration: BoxDecoration(
-              color: Color.fromRGBO(233, 233, 233, 0.8),
-              borderRadius: BorderRadius.circular(30)),
+            color: Color.fromRGBO(233, 233, 233, 0.8),
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
         actions: <Widget>[
           InkWell(

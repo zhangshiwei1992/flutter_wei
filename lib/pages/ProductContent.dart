@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_wei/model/FileDetail.dart';
 import 'package:flutter_wei/model/Result.dart';
-import 'package:flutter_wei/model/VehicleType.dart';
 import 'package:flutter_wei/utils/HttpUtils.dart';
 
 import '../utils/ScreenAdaper.dart';
@@ -13,7 +12,7 @@ import 'ProductContent/ProductContentThird.dart';
 
 class ProductContentPage extends StatefulWidget {
   static final String routerName = "/productContent";
-  final Map arguments;
+  Map arguments;
 
   ProductContentPage({Key key, this.arguments}) : super(key: key);
 
@@ -22,14 +21,14 @@ class ProductContentPage extends StatefulWidget {
 
 class _ProductContentPageState extends State<ProductContentPage> {
   FileDetail _fileDetail = new FileDetail();
-  VehicleType vehicleType = new VehicleType();
-  List vehicleTypeList = [];
 
   @override
   void initState() {
     super.initState();
     _findFileDetailById();
-    _getVehicleType();
+    print('id: ' + widget.arguments['id'].toString());
+    print('_keywords: ' + widget.arguments['_keywords'].toString());
+    print('vehicleBrandId: ' + widget.arguments['vehicleBrandId'].toString());
   }
 
   // 附件详情
@@ -38,33 +37,11 @@ class _ProductContentPageState extends State<ProductContentPage> {
     if (fileDetailId == null || fileDetailId == '') {
       fileDetailId = 781361;
     }
-    Result result =
-        await dioPost("/fileDetail/findByPrimaryKey", {"id": fileDetailId});
+    Result result = await dioPost(
+        "/fileDetail/findByPrimaryKey", {"id": "${fileDetailId}"});
     setState(() {
       if (result.success && result.value != null) {
         _fileDetail = FileDetail.fromJson(result.value);
-      }
-    });
-  }
-
-  // 车型信息
-  _getVehicleType() async {
-    var vehicleBrandId = widget.arguments['vehicleBrandId'];
-    if (vehicleBrandId == null || vehicleBrandId == '') {
-      vehicleBrandId = 1;
-    }
-    Result result =
-        await dioPost("/vehicleType/findList", {"brandId": vehicleBrandId});
-    setState(() {
-      if (result.success && result.value != null) {
-        print('result.value ---------- --' + result.value.length().toString());
-        result.value.forEach((type) {
-          vehicleTypeList.add(VehicleType.fromJson(type));
-        });
-        vehicleType = VehicleType.fromJson(vehicleTypeList.first);
-        print('vehicleType======name======' + vehicleType.name);
-        print('vehicleType======name======' + vehicleType.name);
-        print('vehicleType======name======' + vehicleType.name);
       }
     });
   }
@@ -129,7 +106,8 @@ class _ProductContentPageState extends State<ProductContentPage> {
             TabBarView(
               children: <Widget>[
                 ProductContentFirst(
-                    fileDetail: _fileDetail, vehicleType: vehicleType),
+                    fileDetail: _fileDetail,
+                    vehicleBrandId: widget.arguments['vehicleBrandId']),
                 ProductContentSecond(),
                 ProductContentThird()
               ],
