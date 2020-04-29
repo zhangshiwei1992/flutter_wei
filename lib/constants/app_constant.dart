@@ -2,8 +2,7 @@ import 'package:intl/intl.dart';
 
 class AppConstant {
   static String defaultImage =
-      "http://biz-oss-dev.miaogoche.cn/zulin/bizImage/F_FC15302410810000000017_GPS_O_15638127740000000741_0.png?Expires=4719486397&OSSAccessKeyId=LTAIFVdn88UX5oys&Signature=TB6sctRhQnUltL1qy6tOPEbvavE%3D";
-
+      "http://img5.mtime.cn/mt/2019/01/09/171109.88229500_270X405X4.jpg";
   static const zero = 0;
 
   /// 验证码倒计时

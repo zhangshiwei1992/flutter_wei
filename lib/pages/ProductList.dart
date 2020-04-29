@@ -40,8 +40,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   List<FileDetail> _fileDetailList = [];
   String _defaultImage =
-      "http://biz-oss-dev.miaogoche.cn/zulin/bizImage/F_FC15302410810000000027_V15637857830000002549_0.png?Expires=4719486988&OSSAccessKeyId=LTAIFVdn88UX5oys&Signature=VqVKTd%2B8Ojh6EuQhRaKdXR0v5Nw%3D";
-
+      "http://img5.mtime.cn/mt/2019/01/09/171109.88229500_270X405X4.jpg";
   // 配置search搜索框的值
   var _initKeywordsController = new TextEditingController();
 
